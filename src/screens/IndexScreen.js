@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   View,
   Button,
@@ -9,9 +9,23 @@ import {
 } from "react-native";
 import { Context } from "../context/BlogContext";
 import { AntDesign, Feather } from "@expo/vector-icons";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 const IndexScreen = ({ navigation }) => {
-  const { state, deleteBlogPost } = useContext(Context);
+  const { state, deleteBlogPost, getBlogPosts } = useContext(Context);
+
+  useEffect(() => {
+    getBlogPosts();
+
+    const listener = navigation.addListener('didFocus', () => {
+      getBlogPosts();
+    });
+
+    return () => {
+      listener.remove();
+    };
+
+  }, [])
 
   return (
     <View>
